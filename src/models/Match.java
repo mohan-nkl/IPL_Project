@@ -189,4 +189,14 @@ public class Match {
     public void setUmpire3(String umpire3) {
         this.umpire3 = umpire3;
     }
+
+    public String getLoser() {
+        if (this.getWinner().equals(this.getTeam1())) {
+            return this.getTeam2();
+        }
+        else if (this.getWinner().equals(this.getTeam2())) {
+            return this.getTeam1();
+        }
+        return "No Winner";
+    }
 }
