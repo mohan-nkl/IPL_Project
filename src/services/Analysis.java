@@ -122,4 +122,34 @@ public class Analysis {
         return topPerformers;
     }
 
+    public static Map<Integer, List<String>> getWorstPerformerOfTheSeasonAtGroupStage(Map<Integer, List<Match>> matchesInSeason) {
+
+        Map<Integer, List<String>> worstPerformers = new TreeMap<>();
+        for (Integer season: matchesInSeason.keySet()) {
+            List<Match> matches = matchesInSeason.get(season);
+            int cutoff = season < 2011 ? matches.size() - 3 : matches.size() - 4;
+
+            Map<String, Integer> lossesByEachTeam = new HashMap<>();
+            int mostLosses = 0;
+
+            for (int i = 0; i < cutoff; i++) {
+                String loser = matches.get(i).getLoser();
+                if (!loser.equals("No Winner")) {
+                    lossesByEachTeam.put(loser, lossesByEachTeam.getOrDefault(loser, 0) + 1);
+                    mostLosses = Math.max(mostLosses, lossesByEachTeam.get(loser));
+                }
+            }
+
+            List<String> bottom = new ArrayList<>();
+            for (String team: lossesByEachTeam.keySet()) {
+                if (lossesByEachTeam.get(team) == mostLosses) {
+                    bottom.add(team);
+                }
+            }
+
+            worstPerformers.put(season, bottom);
+        }
+
+        return worstPerformers;
+    }
 }
