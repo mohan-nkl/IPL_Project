@@ -14,6 +14,7 @@ public class Main {
         List<Match> matches = CsvReader.loadMatches();
         List<Delivery> deliveries = CsvReader.loadDeliveries();
 
+
         // Feature 1 - Matches per season
         System.out.println("========================================");
         System.out.println("Matches per season");
@@ -33,6 +34,7 @@ public class Main {
         }
         System.out.println("========================================");
 
+
         // Feature 3: Total extra runs conceded by each team in 2016
         System.out.println("========================================");
         System.out.println("Total extra runs conceded by each team in 2016");
@@ -42,6 +44,7 @@ public class Main {
             System.out.println(entry.getKey() + " : " + entry.getValue());
         }
         System.out.println("========================================");
+
 
         // Feature 4: Best economic bowlers in 2015
         System.out.println("========================================");
@@ -56,6 +59,7 @@ public class Main {
         }
         System.out.println("========================================");
 
+
         // Feature 5: Matches in every season according to the match's date
         System.out.println("========================================");
         System.out.println("Matches in every season according to the match's date");
@@ -65,6 +69,16 @@ public class Main {
             for (Match match: entry.getValue()) {
                 System.out.println(match.getDate() + " | " + match.getTeam1() + " vs " + match.getTeam2() + " | Winner: " + match.getWinner());
             }
+        }
+        System.out.println("========================================");
+
+
+        // Feature 6: Get the winner in each season
+        System.out.println("========================================");
+        System.out.println("Winner of each season");
+        Map<Integer, String> seasonWinner = Analysis.getSeasonWinners(matchesBySeason);
+        for (Map.Entry<Integer, String> entry: seasonWinner.entrySet()) {
+            System.out.println("Season " + entry.getKey() + " : " + entry.getValue());
         }
         System.out.println("========================================");
 
