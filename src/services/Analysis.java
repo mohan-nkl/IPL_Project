@@ -1,11 +1,9 @@
 package services;
 
+import models.Delivery;
 import models.Match;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Analysis {
 
@@ -27,5 +25,18 @@ public class Analysis {
             }
         }
         return teamWinCount;
+    }
+
+    public static Map<String, Integer> totalExtraRunsConcededByEachTeam(Set<Integer> matchIds, List<Delivery> deliveries) {
+
+        Map<String, Integer> teamExtraRuns = new HashMap<>();
+        for (Delivery delivery: deliveries) {
+            if (matchIds.contains(delivery.getMatchId())) {
+                String bowlingTeam = delivery.getBowlingTeam();
+                int extraRuns = delivery.getExtraRuns();
+                teamExtraRuns.put(bowlingTeam, teamExtraRuns.getOrDefault(bowlingTeam, 0) + extraRuns);
+            }
+        }
+        return teamExtraRuns;
     }
 }
