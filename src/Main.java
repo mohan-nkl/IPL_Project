@@ -56,6 +56,18 @@ public class Main {
         }
         System.out.println("========================================");
 
+        // Feature 5: Matches in every season according to the match's date
+        System.out.println("========================================");
+        System.out.println("Matches in every season according to the match's date");
+        Map<Integer, List<Match>> matchesBySeason = Analysis.getMatchesGroupedAndSortedBySeason(matches);
+        for (Map.Entry<Integer, List<Match>> entry: matchesBySeason.entrySet()) {
+            System.out.println("----- Season " + entry.getKey() + " -----");
+            for (Match match: entry.getValue()) {
+                System.out.println(match.getDate() + " | " + match.getTeam1() + " vs " + match.getTeam2() + " | Winner: " + match.getWinner());
+            }
+        }
+        System.out.println("========================================");
+
 
     }
 
