@@ -1,5 +1,6 @@
 package utils;
 
+import models.Delivery;
 import models.Match;
 
 import java.io.BufferedReader;
@@ -25,6 +26,24 @@ public class CsvReader {
             ));
         }
         return matches;
+    }
+
+    public static List<Delivery> loadDeliveries() {
+        List<Delivery> deliveries = new ArrayList<>();
+        List<String[]> linesToParts = readCsvFile("deliveries.csv");
+        for (String[] parts: linesToParts) {
+            deliveries.add(new Delivery(
+                    getInt(parts, 0), getInt(parts, 1),
+                    getString(parts, 2), getString(parts, 3),
+                    getInt(parts, 4), getInt(parts, 5),
+                    getString(parts, 6), getString(parts, 7), getString(parts, 8),
+                    getInt(parts, 9), getInt(parts, 10), getInt(parts, 11),
+                    getInt(parts, 12), getInt(parts, 13), getInt(parts, 14),
+                    getInt(parts, 15), getInt(parts, 16), getInt(parts, 17),
+                    getString(parts, 18), getString(parts, 19), getString(parts, 20)
+            ));
+        }
+        return deliveries;
     }
 
     private static List<String[]> readCsvFile(String fileName) {
