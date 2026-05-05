@@ -83,6 +83,25 @@ public class Main {
         System.out.println("========================================");
 
 
+        // Feature 7: Get the best performers in each season
+        System.out.println("========================================");
+        System.out.println("Best performers in each season at Group stage");
+        Map<Integer, List<String>> bestPerformers = Analysis.getTopPerformerOfTheSeasonAtGroupStage(matchesBySeason);
+        for (Map.Entry<Integer, List<String>> entry: bestPerformers.entrySet()) {
+            System.out.print(entry.getKey() + " : ");
+            List<String> teams = entry.getValue();
+            for (int i = 0; i < teams.size(); i++) {
+                if (i != teams.size() - 1) {
+                    System.out.print(teams.get(i) + ", ");
+                }
+                else {
+                    System.out.print(teams.get(i));
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("========================================");
+
     }
 
     private static Set<Integer> getMatchIds(List<Match> matches, int season) {
