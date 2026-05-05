@@ -39,4 +39,36 @@ public class Analysis {
         }
         return teamExtraRuns;
     }
+
+    public static List<Map.Entry<String, Double>> getBestEconomicBowlers(Set<Integer> matchIds, List<Delivery> deliveries) {
+
+        Map<String, Integer> runsConcededByEachPlayer = new HashMap<>();
+        Map<String, Integer> ballsBowledByEachPlayer = new HashMap<>();
+
+        for (Delivery delivery: deliveries) {
+            if (matchIds.contains(delivery.getMatchId())) {
+                String bowler = delivery.getBowler();
+                int runs = delivery.getTotalRuns() - delivery.getByeRuns() - delivery.getLegByeRuns() - delivery.getPenaltyRuns();
+                runsConcededByEachPlayer.put(bowler, runsConcededByEachPlayer.getOrDefault(bowler, 0) + runs);
+                if (delivery.getWideRuns() == 0 && delivery.getNoBallRuns() == 0) {
+                    ballsBowledByEachPlayer.put(bowler, ballsBowledByEachPlayer.getOrDefault(bowler, 0) + 1);
+                }
+            }
+        }
+
+        Map<String, Double> bowlerEconomyRate = new HashMap<>();
+        for (String bowler: runsConcededByEachPlayer.keySet()) {
+            int runs = runsConcededByEachPlayer.get(bowler);
+            int balls = ballsBowledByEachPlayer.getOrDefault(bowler, 0);
+            if (balls != 0) {
+                double economyRate = (runs * 6.0) / balls;
+                bowlerEconomyRate.put(bowler, economyRate);
+            }
+        }
+
+        List<Map.Entry<String, Double>> sortedBowlers = new ArrayList<>(bowlerEconomyRate.entrySet());
+        sortedBowlers.sort((a, b) -> Double.compare(a.getValue(), b.getValue()));
+        return sortedBowlers;
+
+    }
 }
