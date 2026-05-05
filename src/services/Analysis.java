@@ -93,4 +93,33 @@ public class Analysis {
         return seasonWinners;
     }
 
+    public static Map<Integer, List<String>> getTopPerformerOfTheSeasonAtGroupStage(Map<Integer, List<Match>> matchesInSeason) {
+
+        Map<Integer, List<String>> topPerformers = new TreeMap<>();
+        for (Integer season: matchesInSeason.keySet()) {
+            List<Match> matches = matchesInSeason.get(season);
+            int cutOff = season < 2011 ? matches.size() - 3 : matches.size() - 4;
+
+            Map<String, Integer> winsByEachTeam = new HashMap<>();
+            int mostWins = 0;
+
+            for (int i = 0; i < cutOff; i++) {
+                String winner = matches.get(i).getWinner();
+                winsByEachTeam.put(winner, winsByEachTeam.getOrDefault(winner, 0) + 1);
+                mostWins = Math.max(mostWins, winsByEachTeam.get(winner));
+            }
+
+            List<String> top = new ArrayList<>();
+            for (String team: winsByEachTeam.keySet()) {
+                if (winsByEachTeam.get(team) == mostWins) {
+                    top.add(team);
+                }
+            }
+
+            topPerformers.put(season, top);
+        }
+
+        return topPerformers;
+    }
+
 }
