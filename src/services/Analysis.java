@@ -83,6 +83,14 @@ public class Analysis {
         return matchesInSeason;
     }
 
+    public static Map<Integer, String> getSeasonWinners(Map<Integer, List<Match>> matchesInSeason) {
 
+        Map<Integer, String> seasonWinners = new TreeMap<>();
+        for (Map.Entry<Integer, List<Match>> entry: matchesInSeason.entrySet()) {
+            List<Match> matches = entry.getValue();
+            seasonWinners.put(entry.getKey(), matches.get(matches.size() - 1).getWinner());
+        }
+        return seasonWinners;
+    }
 
 }
