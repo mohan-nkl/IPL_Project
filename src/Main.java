@@ -87,7 +87,19 @@ public class Main {
         System.out.println("========================================");
         System.out.println("Best performers in each season at Group stage");
         Map<Integer, List<String>> bestPerformers = Analysis.getTopPerformerOfTheSeasonAtGroupStage(matchesBySeason);
-        for (Map.Entry<Integer, List<String>> entry: bestPerformers.entrySet()) {
+        printSeasonTeamMap(bestPerformers);
+
+
+        // Feature 8: Get the worst performers in each season
+        System.out.println("========================================");
+        System.out.println("Worst performers in each season at Group stage");
+        Map<Integer, List<String>> worstPerformers = Analysis.getWorstPerformerOfTheSeasonAtGroupStage(matchesBySeason);
+        printSeasonTeamMap(worstPerformers);
+
+    }
+
+    private static void printSeasonTeamMap(Map<Integer, List<String>> teamPerformanceMap) {
+        for (Map.Entry<Integer, List<String>> entry: teamPerformanceMap.entrySet()) {
             System.out.print(entry.getKey() + " : ");
             List<String> teams = entry.getValue();
             for (int i = 0; i < teams.size(); i++) {
@@ -101,7 +113,6 @@ public class Main {
             System.out.println();
         }
         System.out.println("========================================");
-
     }
 
     private static Set<Integer> getMatchIds(List<Match> matches, int season) {
