@@ -71,4 +71,18 @@ public class Analysis {
         return sortedBowlers;
 
     }
+
+    public static Map<Integer, List<Match>> getMatchesGroupedAndSortedBySeason(List<Match> matches) {
+        Map<Integer, List<Match>> matchesInSeason = new TreeMap<>();
+        for (Match match: matches) {
+            matchesInSeason.computeIfAbsent(match.getSeason(), k -> new ArrayList<>()).add(match);
+        }
+        for (Integer season: matchesInSeason.keySet()) {
+            matchesInSeason.get(season).sort((a, b) -> a.getDate().compareTo(b.getDate()));
+        }
+        return matchesInSeason;
+    }
+
+
+
 }
