@@ -3,7 +3,6 @@ import models.Match;
 import services.Analysis;
 import utils.CsvReader;
 
-import java.sql.SQLOutput;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +81,23 @@ public class Main {
         Map<Integer, List<String>> qualifiedTeams = Analysis.getTeamsWhichEnteredKnockOutStage(matchesBySeason);
         printQualifiedTeams(qualifiedTeams);
 
+
+        // Feature 10: Player with highest strike rate in the last 5 overs from each team over the years.
+        System.out.println("========================================");
+        System.out.println("Highest strike rate batters in the last 5 overs of the match per team per season");
+        Map<Integer, Map<String, String>> strikeRates =
+                Analysis.getHighestStrikeRatePlayerPerTeamPerSeason(matchesBySeason, deliveries);
+        printHighestStrikeRatePlayerPerTeamPerSeason(strikeRates);
+    }
+
+    private static void printHighestStrikeRatePlayerPerTeamPerSeason(Map<Integer, Map<String, String>> strikeRates) {
+        for (Map.Entry<Integer, Map<String, String>> seasonEntry : strikeRates.entrySet()) {
+            System.out.println("--------");
+            System.out.println("Season " + seasonEntry.getKey());
+            for (Map.Entry<String, String> teamEntry : seasonEntry.getValue().entrySet()) {
+                System.out.println(teamEntry.getKey() + " : " + teamEntry.getValue());
+            }
+        }
     }
 
     private static void printQualifiedTeams(Map<Integer, List<String>> qualifiedTeams) {
