@@ -176,4 +176,148 @@ public class Analysis {
         }
         return knockoutTeams;
     }
+
+    public static Map<Integer, Map<String, String>> getHighestStrikeRatePlayerPerTeamPerSeason(
+            Map<Integer, List<Match>> matchesBySeason, List<Delivery> deliveries) {
+
+        Map<Integer, Map<Integer, Integer>> lastOverPerInningsPerMatch = getLastOverPerInningsPerMatch(deliveries);
+        Map<Integer, Set<Integer>> matchIdsBySeason = getMatchIdsBySeason(matchesBySeason);
+        Map<Integer, Map<String, Map<String, int[]>>> statsBySeason = getBatterStatsInLastFiveOvers(deliveries, matchIdsBySeason, lastOverPerInningsPerMatch);
+        return getBestStrikeRatePlayerPerTeamPerSeason(statsBySeason);
+    }
+
+
+// Structure: matchId -> inning -> lastOver
+    private static Map<Integer, Map<Integer, Integer>> getLastOverPerInningsPerMatch(List<Delivery> deliveries) {
+
+        Map<Integer, Map<Integer, Integer>> lastOverPerInningsPerMatch = new HashMap<>();
+
+        for (Delivery delivery : deliveries) {
+            int matchId = delivery.getMatchId();
+            int inning = delivery.getInning();
+            int over = delivery.getOver();
+
+            if (!lastOverPerInningsPerMatch.containsKey(matchId)) {
+                lastOverPerInningsPerMatch.put(matchId, new HashMap<>());
+            }
+
+            Map<Integer, Integer> inningOverMap = lastOverPerInningsPerMatch.get(matchId);
+            if (!inningOverMap.containsKey(inning) || over > inningOverMap.get(inning)) {
+                inningOverMap.put(inning, over);
+            }
+        }
+        return lastOverPerInningsPerMatch;
+    }
+
+
+// Structure: season -> set of matchIds
+    private static Map<Integer, Set<Integer>> getMatchIdsBySeason(Map<Integer, List<Match>> matchesBySeason) {
+        Map<Integer, Set<Integer>> matchIdsBySeason = new TreeMap<>();
+        for (Map.Entry<Integer, List<Match>> seasonEntry : matchesBySeason.entrySet()) {
+            int season = seasonEntry.getKey();
+            Set<Integer> matchIds = new HashSet<>();
+            for (Match match : seasonEntry.getValue()) {
+                matchIds.add(match.getMatchId());
+            }
+            matchIdsBySeason.put(season, matchIds);
+        }
+        return matchIdsBySeason;
+    }
+
+    // Helper 3: Find which season a match belongs to
+    private static int getSeasonForMatch(int matchId, Map<Integer, Set<Integer>> matchIdsBySeason) {
+        for (Map.Entry<Integer, Set<Integer>> entry : matchIdsBySeason.entrySet()) {
+            if (entry.getValue().contains(matchId)) {
+                return entry.getKey();
+            }
+        }
+        return -1;
+    }
+
+    // Helper 4: Accumulate runs and balls for each batter in the last 5 overs
+// Structure: season -> team -> batter -> [runs, balls]
+    private static Map<Integer, Map<String, Map<String, int[]>>> getBatterStatsInLastFiveOvers(
+            List<Delivery> deliveries,
+            Map<Integer, Set<Integer>> matchIdsBySeason,
+            Map<Integer, Map<Integer, Integer>> lastOverPerInningsPerMatch) {
+
+        Map<Integer, Map<String, Map<String, int[]>>> statsBySeason = new TreeMap<>();
+        for (Delivery delivery : deliveries) {
+            int matchId = delivery.getMatchId();
+            int inning = delivery.getInning();
+            int over = delivery.getOver();
+
+            int season = getSeasonForMatch(matchId, matchIdsBySeason);
+            if (season == -1) {
+                continue;
+            }
+
+            int lastOver = lastOverPerInningsPerMatch.get(matchId).get(inning);
+            if (over < lastOver - 4) {
+                 continue;
+            }
+
+            String team = delivery.getBattingTeam();
+            String batter = delivery.getBatter();
+
+            if (!statsBySeason.containsKey(season)) {
+                statsBySeason.put(season, new HashMap<>());
+            }
+            if (!statsBySeason.get(season).containsKey(team)) {
+                statsBySeason.get(season).put(team, new HashMap<>());
+            }
+            if (!statsBySeason.get(season).get(team).containsKey(batter)) {
+                statsBySeason.get(season).get(team).put(batter, new int[2]);
+            }
+
+            int[] stats = statsBySeason.get(season).get(team).get(batter);
+            stats[0] += delivery.getBatterRuns(); // runs
+            if (delivery.getWideRuns() == 0) {
+                stats[1]++; // balls (exclude wides)
+            }
+        }
+        return statsBySeason;
+    }
+
+    // Helper 5: Find the batter with the highest strike rate per team per season
+    private static Map<Integer, Map<String, String>> getBestStrikeRatePlayerPerTeamPerSeason(
+            Map<Integer, Map<String, Map<String, int[]>>> statsBySeason) {
+
+        Map<Integer, Map<String, String>> result = new TreeMap<>();
+        for (Map.Entry<Integer, Map<String, Map<String, int[]>>> seasonEntry : statsBySeason.entrySet()) {
+            int season = seasonEntry.getKey();
+            Map<String, String> bestPlayerPerTeam = new HashMap<>();
+
+            for (Map.Entry<String, Map<String, int[]>> teamEntry : seasonEntry.getValue().entrySet()) {
+                String team = teamEntry.getKey();
+                String bestPlayer = null;
+                double bestStrikeRate = 0.0;
+
+                for (Map.Entry<String, int[]> playerEntry : teamEntry.getValue().entrySet()) {
+                    String batter = playerEntry.getKey();
+                    int runs = playerEntry.getValue()[0];
+                    int balls = playerEntry.getValue()[1];
+
+                    if (balls == 0) {
+                        continue;
+                    }
+
+                    double strikeRate = (runs * 100.0) / balls;
+                    if (strikeRate > bestStrikeRate) {
+                        bestStrikeRate = strikeRate;
+                        bestPlayer = batter;
+                    }
+                }
+
+                if (bestPlayer != null) {
+                    bestPlayerPerTeam.put(team, bestPlayer + " : " + String.format("%.2f", bestStrikeRate));
+                }
+            }
+
+            result.put(season, bestPlayerPerTeam);
+        }
+        return result;
+    }
+
+
 }
