@@ -3,6 +3,7 @@ import models.Match;
 import services.Analysis;
 import utils.CsvReader;
 
+import java.sql.SQLOutput;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,30 @@ public class Main {
         Map<Integer, List<String>> worstPerformers = Analysis.getWorstPerformerOfTheSeasonAtGroupStage(matchesBySeason);
         printSeasonTeamMap(worstPerformers);
 
+
+        // Feature 9: Get the teams which qualified for knockout games in each season
+        System.out.println("========================================");
+        System.out.println("Teams which qualified for knockouts");
+        Map<Integer, List<String>> qualifiedTeams = Analysis.getTeamsWhichEnteredKnockOutStage(matchesBySeason);
+        printQualifiedTeams(qualifiedTeams);
+
+    }
+
+    private static void printQualifiedTeams(Map<Integer, List<String>> qualifiedTeams) {
+        for (Map.Entry<Integer, List<String>> entry: qualifiedTeams.entrySet()) {
+            System.out.print(entry.getKey() + " : ");
+            List<String> teams = entry.getValue();
+            for (int i = 0; i < 4; i++) {
+                if (i < 3) {
+                    System.out.print(teams.get(i) + ", ");
+                }
+                else {
+                    System.out.print(teams.get(i));
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("========================================");
     }
 
     private static void printSeasonWinner(Map<Integer, String> seasonWinner) {

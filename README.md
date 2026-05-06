@@ -14,8 +14,9 @@ A Java-based data analysis project that processes IPL match and delivery data fr
 4. **Top Economical Bowlers in 2015** — Best bowlers ranked by economy rate during the 2015 season.
 5. **Match Schedule by Season** — All matches in each season listed in chronological order.
 6. **Season Winners** — The team that won the IPL trophy in each season.
-7. **Best Performing Team per Season** — Team(s) with the most wins during the group stage of each season.
-8. **Worst Performing Team per Season** — Team(s) with the most losses during the group stage of each season.
+7. **Best Performing Team per Season in terms of Wins** — Team(s) with the most wins during the group stage of each season.
+8. **Worst Performing Team per Season in terms of Losses** — Team(s) with the most losses during the group stage of each season.
+9. **Teams in the Knock-out stage** - Teams which qualified for the knock-out stage in each season.
 
 ## Project Structure
 

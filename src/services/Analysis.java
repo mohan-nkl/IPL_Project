@@ -152,4 +152,28 @@ public class Analysis {
 
         return worstPerformers;
     }
+
+    public static Map<Integer, List<String>> getTeamsWhichEnteredKnockOutStage(Map<Integer, List<Match>> matchesInSeason) {
+
+        Map<Integer, List<String>> knockoutTeams = new TreeMap<>();
+        for (Integer season: matchesInSeason.keySet()) {
+            List<Match> matches = matchesInSeason.get(season);
+            int size = matches.size();
+            List<String> teams = new ArrayList<>();
+            if (season < 2011) {
+                teams.add(matches.get(size - 3).getTeam1());
+                teams.add(matches.get(size - 3).getTeam2());
+                teams.add(matches.get(size - 2).getTeam1());
+                teams.add(matches.get(size - 2).getTeam2());
+            }
+            else {
+                teams.add(matches.get(size - 4).getTeam1());
+                teams.add(matches.get(size - 4).getTeam2());
+                teams.add(matches.get(size - 3).getTeam1());
+                teams.add(matches.get(size - 3).getTeam2());
+            }
+            knockoutTeams.put(season, teams);
+        }
+        return knockoutTeams;
+    }
 }
