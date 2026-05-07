@@ -12,11 +12,12 @@ A Java-based data analysis project that processes IPL match and delivery data fr
 2. **All-time Wins by Team** — Total matches won by each team across all seasons.
 3. **Extra Runs in 2016** — Total extra runs conceded by each team during the 2016 season.
 4. **Top Economical Bowlers in 2015** — Best bowlers ranked by economy rate during the 2015 season.
-5. **Match Schedule by Season** — All matches in each season listed in chronological order.
+5. **Match Schedule by Season** — All matches in each season are listed in chronological order.
 6. **Season Winners** — The team that won the IPL trophy in each season.
 7. **Best Performing Team per Season in terms of Wins** — Team(s) with the most wins during the group stage of each season.
 8. **Worst Performing Team per Season in terms of Losses** — Team(s) with the most losses during the group stage of each season.
-9. **Teams in the Knock-out stage** - Teams which qualified for the knock-out stage in each season.
+9. **Teams in the Knock-out stage** - Teams that qualified for the knock-out stage in each season.
+10. **Player with the highest strike-rate** - Player with the highest strike rate in the last 5 overs of the innings from each team in each season
 
 ## Project Structure
 
